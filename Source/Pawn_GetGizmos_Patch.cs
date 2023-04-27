@@ -14,17 +14,17 @@ namespace ModOne
             int num = 700000101;
             Command_Action commandAction = new Command_Action();
             var equipmentList = __instance.equipment.AllEquipmentListForReading;
-            StubWithLight stubWithLight = null;
+            WeaponWithLight weaponWithLight = null;
             foreach (var equipment in equipmentList)
             {
-                if (equipment is StubWithLight)
+                if (equipment is WeaponWithLight)
                 {
-                    stubWithLight = (StubWithLight) equipment;
+                    weaponWithLight = (WeaponWithLight) equipment;
                     break;
                 }
             }
 
-            if (stubWithLight == null)
+            if (weaponWithLight == null)
             {
                 foreach (var gizmo in gizmos)
                 {
@@ -34,28 +34,25 @@ namespace ModOne
                 yield break;
             }
 
-            switch (stubWithLight.Mode)
+            switch (weaponWithLight.Mode)
             {
-                case StubWithLight.LightMode.Automatic:
-                    ((Command) commandAction).icon =
-                        (Texture) ContentFinder<Texture2D>.Get("Ui/Commands/CommandButton_LightModeAutomatic", true);
-                    ((Command) commandAction).defaultLabel = "Light: automatic";
+                case LightMode.Automatic:
+                    commandAction.icon = ContentFinder<Texture2D>.Get(weaponWithLight.GizmoInfo.AutoPath);
+                    commandAction.defaultLabel = weaponWithLight.GizmoInfo.AutoLabel;
                     break;
-                case StubWithLight.LightMode.ForcedOn:
-                    ((Command) commandAction).icon =
-                        (Texture) ContentFinder<Texture2D>.Get("Ui/Commands/CommandButton_LightModeForcedOn", true);
-                    ((Command) commandAction).defaultLabel = "Light: on";
+                case LightMode.ForcedOn:
+                    commandAction.icon = ContentFinder<Texture2D>.Get(weaponWithLight.GizmoInfo.OnPath);
+                    commandAction.defaultLabel = weaponWithLight.GizmoInfo.OnLabel;
                     break;
-                case StubWithLight.LightMode.ForcedOff:
-                    ((Command) commandAction).icon =
-                        (Texture) ContentFinder<Texture2D>.Get("Ui/Commands/CommandButton_LightModeForcedOff", true);
-                    ((Command) commandAction).defaultLabel = "Light: off";
+                case LightMode.ForcedOff:
+                    commandAction.icon = ContentFinder<Texture2D>.Get(weaponWithLight.GizmoInfo.OffPath);
+                    commandAction.defaultLabel = weaponWithLight.GizmoInfo.OffLabel;
                     break;
             }
 
-            commandAction.defaultDesc = "Click to switch mode.";
-            commandAction.activateSound = SoundDef.Named("Click");
-            commandAction.action = new Action(stubWithLight.SwitchLightMode);
+            commandAction.defaultDesc = weaponWithLight.GizmoInfo.Desc;
+            commandAction.activateSound = SoundDef.Named(weaponWithLight.GizmoInfo.SoundDefName);
+            commandAction.action = weaponWithLight.SwitchLightMode;
             commandAction.groupKey = num + 1;
             foreach (var gizmo in gizmos)
             {
@@ -65,7 +62,7 @@ namespace ModOne
                 }
             }
 
-            yield return (Gizmo) commandAction;
+            yield return commandAction;
         }
     }
 }

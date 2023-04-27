@@ -16,35 +16,35 @@ namespace ModOne
                 return;
             }
 
-            StubWithLight stubWithLight = null;
+            WeaponWithLight weaponWithLight = null;
             foreach (var equipment in equipmentList)
             {
-                if (equipment is StubWithLight)
+                if (equipment is WeaponWithLight)
                 {
-                    stubWithLight = (StubWithLight) equipment;
+                    weaponWithLight = (WeaponWithLight) equipment;
                     break;
                 }
             }
 
-            if (stubWithLight == null)
+            if (weaponWithLight == null)
             {
                 return;
             }
 
             Log.Message("tick");
             // ((ThingWithComps) stubWithLight).Tick();
-            if (!stubWithLight.LightIsOn && Find.TickManager.TicksGame < stubWithLight.NextUpdateTick)
+            if (!weaponWithLight.LightIsOn && Find.TickManager.TicksGame < weaponWithLight.NextUpdateTick)
                 return;
-            stubWithLight.NextUpdateTick = Find.TickManager.TicksGame + stubWithLight.UpdatePeriodInTicks;
+            weaponWithLight.NextUpdateTick = Find.TickManager.TicksGame + weaponWithLight.UpdatePeriodInTicks;
 
 
-            if (stubWithLight.NeedSynchronization)
+            if (weaponWithLight.NeedSynchronization)
             {
-                stubWithLight.SynchronizeLightMode();
-                stubWithLight.NeedSynchronization = false;
+                weaponWithLight.SynchronizeLightMode();
+                weaponWithLight.NeedSynchronization = false;
             }
 
-            stubWithLight.RefreshLightState();
+            weaponWithLight.RefreshLightState();
         }
     }
 }
